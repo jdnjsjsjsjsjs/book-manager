@@ -20,7 +20,12 @@
     </div>
 
     <div class="stats">
-      <p>Всего: {{ total }} | Прочитано: {{ completed }} | Осталось: {{ total - completed }}</p>
+      <p>
+        Всего: {{ total }} |
+        Прочитано: {{ completed }} |
+        Осталось: {{ total - completed }} |
+        Избранные: {{ favorited }}
+      </p>
     </div>
   </div>
 </template>
@@ -36,11 +41,13 @@ const searchQuery = defineModel('searchQuery')
 const filterOptions = [
   { value: 'all', label: 'Все' },
   { value: 'unread', label: 'Непрочитанные' },
-  { value: 'read', label: 'Прочитанные' }
+  { value: 'read', label: 'Прочитанные' },
+  { value: 'favorite', label: 'Избранные' }
 ]
 
 const total = computed(() => props.books.length)
 const completed = computed(() => props.books.filter(b => b.completed).length)
+const favorited = computed(() => props.books.filter(b => b.favorite).length)
 </script>
 
 <style scoped>

@@ -7,6 +7,10 @@
     </div>
 
     <div class="book-actions">
+      <div class="favorite" @click="$emit('toggle-favorite')">
+        {{ book.favorite ? '★' : '☆' }}
+      </div>
+
       <div v-if="book.completed" class="rating">
         <span
           v-for="star in 5"
@@ -36,7 +40,7 @@
 
 <script setup>
 defineProps(['book'])
-defineEmits(['toggle', 'delete', 'rate'])
+defineEmits(['toggle', 'delete', 'rate', 'toggle-favorite'])
 </script>
 
 <style scoped>
@@ -77,6 +81,16 @@ defineEmits(['toggle', 'delete', 'rate'])
   display: flex;
   gap: 8px;
   align-items: center;
+}
+.favorite {
+  font-size: 24px;
+  cursor: pointer;
+  color: #f5b342;
+  margin-right: 8px;
+  transition: transform 0.2s;
+}
+.favorite:hover {
+  transform: scale(1.2);
 }
 .rating {
   display: flex;

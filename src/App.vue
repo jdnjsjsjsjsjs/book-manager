@@ -28,6 +28,7 @@
           @toggle="toggleBook(book.id)"
           @delete="deleteBook(book.id)"
           @rate="rateBook(book.id, $event)"
+          @toggle-favorite="toggleFavorite(book.id)"
         />
       </div>
     </main>
@@ -43,7 +44,10 @@ import BookCard from './components/BookCard.vue'
 const books = ref([])
 const savedBooks = localStorage.getItem('books')
 if (savedBooks) {
-  books.value = JSON.parse(savedBooks)
+  books.value = JSON.parse(savedBooks).map(book => ({
+    ...book,
+    favorite: book.favorite || false
+  }))
 }
 
 const currentFilter = ref('all')
@@ -58,7 +62,8 @@ const addBook = (bookData) => {
     id: Date.now(),
     ...bookData,
     completed: false,
-    rating: 0
+    rating: 0,
+    favorite: false
   }
   books.value.push(newBook)
 }
@@ -86,11 +91,19 @@ const deleteBook = (id) => {
   }
 }
 
+const toggleFavorite = (id) => {
+  const book = books.value.find(b => b.id === id)
+  if (book) {
+    book.favorite = !book.favorite
+  }
+}
+
 const filteredBooks = computed(() => {
   return books.value
     .filter(book => {
       if (currentFilter.value === 'unread') return !book.completed
       if (currentFilter.value === 'read') return book.completed
+      if (currentFilter.value === 'favorite') return book.favorite
       return true
     })
     .filter(book => {
